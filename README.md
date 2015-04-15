@@ -1,4 +1,4 @@
 ### Grupo 19
-## Carrarini, Alexis
-## Borrillo, Sebastián
-## Darchez, Amaro
+## Carrarini, Alexis (alexiscarrarini@hotmail.com)
+## Borrillo, Sebastián (sborrillo@yahoo.com)
+## Darchez, Amaro (amarodarchez@hotmail.com)
