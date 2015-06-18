@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	require('connect.php');
+	include('connect.php');
 	$email=$_POST['email'];
 	$password=$_POST['pass1'];
 	$username=$_POST['username'];
@@ -13,22 +13,33 @@
 	$depto=$_POST['depto'];
 	$floor=$_POST['floor'];
 	$pass2=$_POST['pass2'];
-	
-	if($password==$pass2){
-		$checkemail=mysql_query("SELECT * FROM usuario WHERE email='$email'");
-		$emailexist=mysql_num_rows($checkemail);
-		if($emailexist>0){
-			echo '<script language="javascript">alert("Atencion, el email que ingreso ya esta en uso, verifique sus datos");</script>';
-		}else{
-			mysql_query("INSERT INTO usuario VALUES('$dni', '$name', '$lastName', '$email', '$number', '$city', '$street', '$depto', '$floor', '$password', '$username', 0)");
-			echo '<script language="javascript">alert("usuario registrado con &eacutexito");</script>';
-			header('Location: index.php');
-		}
+	$errors=array();
+
+	if(!preg_match("/^[a-zA-Z]+$/",$name)){ 
+		$errors[]="El nombre debe estar compuesto solo por letras";
+	}	
+	if(!preg_match("/^[a-zA-Z]+$/",$lastName)){
+		$errors[]="El apellido debe estar compuesto solo por letras";
+	}
+	if(strlen($dni)>8 || strlen($dni)<7) {			
+		$errors[]="Se ingresó un DNI invalido";
+	}
+	if($password!=$pass2){
+		$errors[]="Las contraseñas no coinciden";
+	}
+	$checkemail=mysql_query("SELECT * FROM usuario WHERE email='$email'");
+	$emailexist=mysql_num_rows($checkemail);
+	if($emailexist>0){
+		$errors[]="El email \'' .$email . '\' ya se encuentra registrado en el sistema";		
+	}
+	if(empty($errors)){
+		mysql_query("INSERT INTO usuario VALUES('$dni', '$name', '$lastName', '$email', '$number', '$city', '$street', '$depto', '$floor', '$password', '$username', 0)");	
+		$_SESSION['login_user']=$username; 
+		$_SESSION['nivel']=0;					
+		header ("Location: index.php?mensaje=Se ha registrado exitosamente!");
 	}
 	else{
-		echo '<script language="javascript">alert("Las contraseñas no coinciden");</script>';
-	}?>
-	<script language="javascript">window.location='register_form.php';</script>
-	<?php
+		header ("Location: register_form.php?errors=$errors");
+	}				
 	mysql_close();
 ?>
