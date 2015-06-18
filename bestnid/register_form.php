@@ -31,25 +31,24 @@
   <body>
 
     <div class="container">
-
       <form class="form-signin" method="POST" action="register.php">
         <h2 class="form-signin-heading">Completa los datos</h2>
-		<label for="inputUsername" class="sr-only">Nombre de usuario</label>
+		<label for="username" class="sr-only">Nombre de usuario</label>
 		<input type="text" name="username" class="form-control" placeholder="Nombre de usuario" required autofocus>
         <label for="inputEmail" class="sr-only">Correo Electronico</label>
-        <input type="text" id="inputEmail" name="email" class="form-control" placeholder="Correo Electronico" required>
+        <input type="email" id="inputEmail" name="email" class="form-control" placeholder="Correo Electronico" required>
 		<label for="inputName" class="sr-only">Nombre</label>
         <input type="text" id="inputName" name="name" class="form-control" placeholder="Nombre" required>
 		<label for="inputLastName" class="sr-only">Apellido</label>
         <input type="text" id="inputLastName" name="lastName" class="form-control" placeholder="Apellido" required>
 		<label for="inputDni" class="sr-only">DNI</label>
-        <input type="text" id="inputDni" name="dni" class="form-control" placeholder="DNI" required>
+        <input type="number" id="inputDni" name="dni" maxlength=7 class="form-control" placeholder="DNI" required>
 		<label for="inputCity" class="sr-only">Localidad</label>
         <input type="text" id="inputCity" name="city" class="form-control" placeholder="Localidad" required>
 		<label for="inputStreet" class="sr-only">Calle</label>
         <input type="text" id="inputStreet" name="street" class="form-control" placeholder="Calle" required>
 		<label for="inputNumber" class="sr-only">Número</label>
-        <input type="text" id="inputNumber" name="number" class="form-control" placeholder="Número" required>
+        <input type="number" id="inputNumber" name="number" class="form-control" placeholder="Número" required>
 		<label for="inputDepto" class="sr-only">Depto</label>
         <input type="text" id="inputDepto" name="depto" class="form-control" placeholder="Depto">
 		<label for="inputFloor" class="sr-only">Piso</label>
@@ -59,9 +58,21 @@
         <label for="inputPassword2" class="sr-only">Contraseña2</label>
         <input type="password" id="inputPassword2" name="pass2" class="form-control" placeholder="Repetir Contraseña" required>
 		<br>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Registrarse</button>
+        <button name="send" id="send" class="btn btn-lg btn-primary btn-block" type="submit">Registrarse</button>
 		<button class="btn btn-lg btn-primary btn-block" type="submit" onclick="window.location.href='index.php'">Cancelar</button>
       </form>
+
+		<?php
+			if(empty($_POST) && !empty($_GET['errors'])){ ?>
+				<div>
+				<?php
+				foreach($_GET['errors'] as $value){ ?>
+					<h2><?php echo $value; ?></h2>
+				<?php }?>
+				</div>
+			<?php
+			}		
+		?>
 
     </div> <!-- /container -->
 	<hr>
