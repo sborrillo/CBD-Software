@@ -11,16 +11,14 @@
 		$row=mysql_fetch_assoc($result);
 		if ($row['admin']==0){
 			$_SESSION['nivel']=0;
-			header("location:profile.php");
 		}
 		else{
 			$_SESSION['nivel']=1;
-			header("location:profile.php");
 		}
+		header("location:index.php");
 	}else {
-		echo '<script language="javascript">alert("Nombre de usuario o contraseña invalida");</script>';
 		?>
-		<script language="javascript">window.location='index.php';</script>
+		<script language="javascript">window.location='index.php?msg=Nombre de usuario o contraseña incorrecta!';</script>
 		<?php
 	}
 	mysql_close();
