@@ -1,5 +1,6 @@
 <?php
 	include('connect.php');
+	session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,7 +13,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../bestnid-logo.png">
 
-    <title>BestNid</title>
+    <title>Bestnid</title>
 
     <!-- Bootstrap core CSS -->
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -41,16 +42,34 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
-          </button>	
-          <a class="navbar-brand">BestNid</a>
+          </button>
+			<?php if(isset($_SESSION['login_user'])){?>
+				<b class="navbar-brand navbar-right" id="bienvenido"><i><?php echo $_SESSION['login_user']; ?></i></b>	
+			<?php }
+			else{?>
+         	<a class="navbar-brand">Bestnid</a>
+			<?php } ?>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-          <form class="navbar-form navbar-right" method='POST' action='login.php'>
-              <input type="text" id='inputUsername' name="username" class="form-control" placeholder="Nombre de usuario" required>
-              <input type="password" id='inputPassword' name="password" class="form-control" placeholder="Contraseña" required>
-            <button type="submit" class="btn btn-success">Iniciar Sesion</button>
-	    <a class="btn btn-succes" href="register_form.php">Registrarse</a>
-          </form>
+				<?php if(isset($_SESSION['login_user'])){?>	
+					<b class="navbar-brand navbar-right" id="logout"><a href="logout.php">Cerrar Sesion</a></b>
+	  				<b class="navbar-brand navbar-right" id="products"><a href="myproductos.php">Mis productos</a></b>
+	   			<b class="navbar-brand navbar-right" id="products"><a href="#">Datos Personales</a></b>
+				<?php } 
+					else{ ?>
+        				<form class="navbar-form navbar-right" method='POST' action='login.php'>
+            		<input type="text" id='inputUsername' name="username" class="form-control" placeholder="Nombre de usuario" required>
+            		<input type="password" id='inputPassword' name="password" class="form-control" placeholder="Contraseña" required>
+            		<button type="submit" class="btn btn-success">Iniciar Sesion</button>
+	    				<a class="btn btn-succes" href="register_form.php">Registrarse</a>
+								<?php			
+									if(isset($_GET['msg'])){ ?>
+										<div>
+										<b Style="color:#D00909"><?php echo $_GET['msg']; ?></b>
+										</div>
+							 	<?php } ?>
+				<?php } ?>
+         </form>
 
         </div><!--/.navbar-collapse -->
       </div>
@@ -59,33 +78,56 @@
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
       <div class="container">	
-	<div align="center">
-	<br>
-	<img border=5 width="200px" height="200px" src="bestnid-logo.png">
-	</div>        
-	<h1 align="center">Bienvenido a BestNid!</h1> 
-	<br>
-        <p>Una pagina de subastas online donde la necesidad es mas importante que el precio.</p>
-		<p>Podes comenzar buscando el producto que te interesa.</p>
-		<form class="form-signin" action='buscar.php' method='POST'>
-		<input type="text" name='producto' placeholder="Producto" class="form-control">
-        	<button class="btn btn-primary btn-lg" type="submit">Buscar &raquo;</button>
-		</form>
-	<br>
-	<a class="btn btn-primary btn-lg" href="productos.php" role="button">Ver todos los productos &raquo;</a>
+			<?php
+				if(isset($_GET['mensaje'])){ ?>
+					<div>
+						<h2><?php echo $_GET['mensaje']; ?></h2>
+					</div>
+				<?php } ?>
+			<div align="center">
+				<br><br>
+				<img border=5 width="150px" height="150px" src="bestnid-logo.png">
+			</div>        
+			<h1 align="center">Bienvenido a Bestnid!</h1> 
+			<br>
+     		<p>Una pagina de subastas online donde la necesidad es mas importante que el precio.</p>
+			<p>Podes comenzar publicando un producto.</p> <a class="btn btn-primary btn-lg" href="publicar_form.php" role="button">Publicar producto &raquo;</a>
+			<br>
+			<br>
+			<p>Tambien podes buscar el producto que te interesa.</p>
+			<form class="form-signin" action='buscar.php' method='POST'>
+				<input type="text" name='producto' placeholder="Producto" class="form-control">
+        		<button class="btn btn-primary btn-lg" type="submit">Buscar &raquo;</button>
+			</form>
+			<br>
       </div>
     </div>
 
     <div class="container">
       <!-- Example row of columns -->
+			<?php
+				$sql=mysql_query("SELECT * FROM publicacion ORDER BY RAND() LIMIT 15");
+			?>
+			<h1>Algunos de nuestros productos</h1>
+			<?php for($i=1;$i<=5;$i++){ ?>
+      	<div class="row">
+				<?php 
+				for($x=1;$x<=3;$x++){
+					$row=mysql_fetch_array($sql, MYSQL_ASSOC) ?>
+					<div class="col-md-4">
+						<h2><?php echo $row['nombre']; ?></h2>
+						<img width="350px" height="250px" src="../fotos/<?php echo $row['foto'];?>"> 
+						<p><a class="btn btn-default" href="producto.php/?name=<?php echo $row['nombre'] ?>&desc=<?php echo $row['descripcion'] ?>&date=<?php echo $row['fecha'] ?>&pic=<?php echo $row['foto'] ?>&id=<?php echo $row['id_publicacion'] ?>" role="button">Ver producto &raquo;</a></p>	
+					</div>	
+				<?php }
+			} ?>
+    </div>
 
-      </div>
+    <hr>
 
-      <hr>
-
-      <footer>
-        <p align="center">&copy; Desarrollado por CBD</p>
-      </footer>
+    <footer>
+    	<p align="center">&copy; Desarrollado por CBD</p>
+    </footer>
     </div> <!-- /container -->
 
 
