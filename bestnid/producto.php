@@ -1,10 +1,20 @@
 <?php	
 	session_start();
+	include('connect.php');
 	$id=$_GET['id'];
-	$name=$_GET['name'];
-	$date=$_GET['date'];
-	$pic=$_GET['pic'];
-	$desc=$_GET['desc'];
+	if(isset($_GET['name'])){
+		$name=$_GET['name'];
+		$date=$_GET['date'];
+		$pic=$_GET['pic'];
+		$desc=$_GET['desc'];
+	}else{
+		$result=mysql_query("SELECT * FROM publicacion WHERE id_publicacion='$id'");
+		$row=mysql_fetch_array($result, MYSQL_ASSOC);
+		$name=$row['nombre'];
+		$date=$row['fecha'];
+		$pic=$row['foto'];
+		$desc=$row['descripcion'];
+	}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -76,13 +86,21 @@
 	</div>
 	<div class="comentarios">
 	</div>
+	<div class="modificado">
+		<?php 
+			if(isset($_GET['mensaje'])){ ?>
+				<h3 Style="color:#0000FF"><?php echo $_GET['mensaje']; ?> </h3>
+			<?php }
+		?>
+	</div>
 	<div class="admin">
 		<?php if($_SESSION['nivel']==1){ ?>
-			<a class="btn btn-primary btn-lg" href="../deletePublicacion.php/?idprod=<?php echo $id ?>" role="button">Eliminar publicación &raquo;</a>
+			<a class="btn btn-primary btn-lg" href="../deletePublicacion.php/?idprod=<?php echo $id ?>" role="button">Eliminar publicación &raquo;</a><br><br>
 		<?php } ?>
 	</div>
 	<?php if($_SESSION['login_user']!=""){ ?>
-		<a class="btn btn-primary btn-lg" href="../profile.php" role="button">Volver &raquo;</a>  
+		<a class="btn btn-primary btn-lg" href="../modificar_publicacion.php/?id=<?php echo $id ?>" role="button">Modificar publicacion &raquo;</a><br><br>
+		<a class="btn btn-primary btn-lg" href="../index.php" role="button">Volver &raquo;</a> 
 	<?php }
 		else { ?>
 		    <a class="btn btn-primary btn-lg" href="../index.php" role="button">Volver &raquo;</a>
