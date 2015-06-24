@@ -9,8 +9,8 @@
 	$date=date("d-m-Y");
 	$types=array('image/jpg', 'image/jpeg', 'image/pjpeg', 'image/png');
 	if(!in_array($_FILES['foto']['type'], $types)){
-		echo '<script language="javascript">alert("Solo puede subir imagenes con la extension JPEG, JPG, PJPEG o PNG");</script>';
-		?><script language="javascript">window.location='publicar_form.php';</script><?php	
+		$mensaje="Solo puede subir imagenes con la extension JPEG, JPG, PJPEG o PNG";
+		header("Location: publicar_form.php?mensaje=$mensaje");	
 	}
 	else{
 		$user=mysql_query("SELECT * FROM usuario WHERE nombre_usuario='$userName'");
@@ -19,8 +19,8 @@
 		if(is_uploaded_file($_FILES['foto']['tmp_name'])){
 			copy($_FILES['foto']['tmp_name'], "../fotos/$name");
 			mysql_query("INSERT INTO publicacion (nombre, descripcion, dni_usuario, fecha, foto) VALUES('$productName', '$description', '$dni', '$date', '$name')");
-			echo '<script language="javascript">alert("Producto publicado con exito");</script>';
-			?><script language="javascript">window.location='myproductos.php';</script><?php
+			$mensaje="Producto publicado con exito!";
+			header("Location: myproductos.php?mensaje=$mensaje");
 		}
 	}	
 	mysql_close();
