@@ -106,17 +106,17 @@
     <div class="container">
       <!-- Example row of columns -->
 			<?php
-				$sql=mysql_query("SELECT * FROM publicacion ORDER BY RAND() LIMIT 15");
+				$sql=mysql_query("SELECT TOP 12 * FROM publicacion ORDER BY id_publicacion DESC");
 			?>
-			<h1>Algunos de nuestros productos</h1>
-			<?php for($i=1;$i<=5;$i++){ ?>
+			<h1>Últimas publicaciones</h1>
+			<?php for($i=1;$i<=4;$i++){ ?>
       	<div class="row">
 				<?php 
 				for($x=1;$x<=3;$x++){
 					$row=mysql_fetch_array($sql, MYSQL_ASSOC) ?>
 					<div class="col-md-4">
 						<h2><?php echo $row['nombre']; ?></h2>
-						<img width="350px" height="250px" src="../fotos/<?php echo $row['foto'];?>"> 
+						<img width	="350px" height="250px" src="../fotos/<?php echo $row['foto'];?>"> 
 						<p><a class="btn btn-default" href="producto.php/?name=<?php echo $row['nombre'] ?>&desc=<?php echo $row['descripcion'] ?>&date=<?php echo $row['fecha'] ?>&pic=<?php echo $row['foto'] ?>&id=<?php echo $row['id_publicacion'] ?>" role="button">Ver producto &raquo;</a></p>	
 					</div>	
 				<?php }
