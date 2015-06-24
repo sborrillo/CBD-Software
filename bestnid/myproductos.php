@@ -70,6 +70,11 @@
 		$dniUser=$user['dni'];
 		$sql=mysql_query("SELECT * FROM publicacion WHERE dni_usuario='$dniUser'");
 	?>
+	<div class="deleteProd">
+		<?php if(isset($_GET['mensaje'])){ ?>
+			<h3 Style="color:#D00909"><?php echo $_GET['mensaje']; ?></h3>
+		<?php } ?>
+	</div>
 	<h1>Mis Productos</h1>
 	<div class="row">
 	<?php
