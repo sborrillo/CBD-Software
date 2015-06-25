@@ -16,6 +16,13 @@
 		$desc=$row['descripcion'];
 	}
 ?>
+<?php
+function formatofecha($date)
+{
+	$fecha = new DateTime($date);
+	echo date_format($fecha, 'd-m-Y');
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -75,7 +82,7 @@
         <h1><?php echo $name; ?></h1>
 	<h2>Descripción:</h2>
 	<h3><?php echo $desc; ?></h3>
-	<p>Fecha publicación: <?php echo $date; ?></p>
+	<p>Fecha publicación: <?php formatofecha($date); ?></p>
       </div>
     </div>
 
