@@ -18,7 +18,7 @@
 		$dni=$result['dni'];
 		if(is_uploaded_file($_FILES['foto']['tmp_name'])){
 			copy($_FILES['foto']['tmp_name'], "../fotos/$name");
-			mysql_query("INSERT INTO publicacion (nombre, descripcion, dni_usuario, fecha, foto) VALUES('$productName', '$description', '$dni', '$date', '$name')");
+			mysql_query("INSERT INTO publicacion (nombre, descripcion, dni_usuario, fecha, foto) VALUES('$productName', '$description', '$dni', now(), '$name')");
 			$mensaje="Producto publicado con exito!";
 			header("Location: myproductos.php?mensaje=$mensaje");
 		}
