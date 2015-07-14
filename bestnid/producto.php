@@ -2,26 +2,14 @@
 	session_start();
 	include('connect.php');
 	$id=$_GET['id'];
-	if(isset($_GET['name'])){
-		$name=$_GET['name'];
-		$date=$_GET['date'];
-		$pic=$_GET['pic'];
-		$desc=$_GET['desc'];
-	}else{
-		$result=mysql_query("SELECT * FROM publicacion WHERE id_publicacion='$id'");
-		$row=mysql_fetch_array($result, MYSQL_ASSOC);
-		$name=$row['nombre'];
-		$date=$row['fecha'];
-		$pic=$row['foto'];
-		$desc=$row['descripcion'];
-	}
-?>
-<?php
-function formatofecha($date)
-{
-	$fecha = new DateTime($date);
-	echo date_format($fecha, 'd-m-Y');
-}
+	$username=$_SESSION['login_user'];
+	$datosUser=mysql_fetch_assoc(mysql_query("SELECT * FROM usuario WHERE nombre_usuario='$username'"));
+	$datosProd=mysql_fetch_assoc(mysql_query("SELECT * FROM publicacion WHERE id_publicacion='$id'"));
+	$name=$datosProd['nombre'];
+	$date=$datosProd['fecha'];
+	$pic=$datosProd['foto'];
+	$desc=$datosProd['descripcion'];
+	$owner=$datosProd['dni_usuario'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -82,20 +70,86 @@ function formatofecha($date)
         <h1><?php echo $name; ?></h1>
 	<h2>Descripción:</h2>
 	<h3><?php echo $desc; ?></h3>
-	<p>Fecha publicación: <?php formatofecha($date); ?></p>
+	<p>Fecha publicación: <?php echo date("d-m-Y", $date); ?></p>
       </div>
     </div>
 
     <div class="container">
       <!-- Example row of columns -->
-	<div align=center class="row">
-		<img width="400px" height="400px" src="../fotos/<?php echo $pic; ?>">
+	<div align=center class="row">	
+		<img style="border:1px solid;" width="500px" height="400px" src="../fotos/<?php echo $pic; ?>">
+	</div><hr>
+	<?php if($datosProd['estado']==1){ ?>
+				<font size=4><b Style="color:#D00909">Esta subasta ya finalizó!</b></font><br><br>	
+	<?php }else{if(isset($_GET['oferta'])){ ?>
+		<b Style="color:#D00909"><?php echo "*".$_GET['oferta']; ?></b><br><br>
+	<?php }
+	if($datosUser['dni']!=$datosProd['dni_usuario']){ ?>
+		<a class="btn btn-lg btn-primary btn-block" href="../ofertarForm.php?id=<?php echo $id; ?>" role="button">Ofertar &raquo;</a>
+	<?php } 
+	if($_SESSION['login_user']!=""){ 
+		if($datosUser['dni']==$datosProd['dni_usuario']){ ?>
+			<a class="btn btn-lg btn-primary btn-block" href="../verOfertas.php/?id=<?php echo $id ?>&pic=<?php echo $pic ?>" role="button">Ver ofertas &raquo;</a><br>
+			<a class="btn btn-lg btn-primary btn-block" href="../modificar_publicacion.php/?id=<?php echo $id ?>" role="button">Modificar publicacion &raquo;</a><br>
+			<a class="btn btn-lg btn-primary btn-block" href="../deletePublicacion.php/?idprod=<?php echo $id ?>" role="button">Eliminar publicación &raquo;</a><br><br>
+		<?php } 
+		}?>
+	<br><br>
+	<?php if(isset($_GET['msgComment'])){ ?>
+		<font size=4><b Style="color:#D00909"><?php echo "*".$_GET['msgComment']; ?></b></font><br>
+	<?php } ?>
+	<h2 align="center">Comentarios al vendedor</h2>
+	<?php
+		if(isset($_GET['msgDeleteComment'])){ ?>
+			<h4 Style="color:#0000FF"><?php echo $_GET['msgDeleteComment']; ?> </h4>
+		<?php } ?>
+	<div class="comentarios" style="border:1px solid;">
+		<?php if($owner!=$datosUser['dni']){ ?>
+		<form method="POST" action="../comentar.php?id=<?php echo $id ?>">
+			<textarea name="coment" placeholder="Escribe tu comentario..." class="form-control" required></textarea>
+			<button class="btn btn-default" type="submit">Comentar &raquo;</button>
+			<br><br>
+		</form>
+		<?php }
+			$query=mysql_query("SELECT * FROM comentario WHERE idPublicacion='$id' ORDER BY idComentario DESC"); 
+			if((mysql_num_rows($query)==0) && ($owner==$datosUser['dni'])){ ?>
+				<div class="emptyComment" style="border-top:thin dotted;">
+					<font size=4><b Style="color:#0404B4">No hay comentarios realizados sobre este producto</b></font><br>
+				</div>
+			<?php }
+			if(mysql_num_rows($query)>5){
+				for($i=1;$i<=5;$i++){ 
+					$row_coment=mysql_fetch_array($query, MYSQL_ASSOC); ?>
+					<div class="comentario" style="border-top:thin dotted;">
+						<br><p><?php echo $row_coment['texto']; ?></p>
+						<?php if($_SESSION['nivel']==1){ 
+									$idComentario=$row_coment['idComentario']; ?>
+									<div align="right"><a href="../borrarComentario.php?idComment=<?php echo $idComentario?>&idProduct=<?php echo $id ?>">Borrar comentario</a></div>  
+								<?php } ?>
+					</div> <?php
+				}
+			}
+			else{
+				if(mysql_num_rows($query)>0){
+					$num_rows=mysql_num_rows($query);
+					for($i=1;$i<=$num_rows;$i++){ 
+						$row_coment=mysql_fetch_array($query, MYSQL_ASSOC); ?>
+						<div class="comentario" style="border-top:thin dotted;">
+							<br><b><?php echo $row_coment['texto']; ?></b>
+							<?php if($_SESSION['nivel']==1){ 
+									$idComentario=$row_coment['idComentario']; ?>
+									<div align="right"><a href="borrarComentario.php?idComment=<?php echo $idComentario?>&idProduct=<?php echo $id ?>">Borrar comentario</a></div>
+								<?php } ?>
+						</div><?php
+					}
+				}
+			}
+		?>
 	</div>
-	<div class="comentarios">
-	</div>
+	<br><br>
 	<div class="modificado">
 		<?php 
-			if(isset($_GET['mensaje'])){ ?>
+			if(isset($_GET['mensaje'])){ ?> 
 				<h3 Style="color:#0000FF"><?php echo $_GET['mensaje']; ?> </h3>
 			<?php }
 		?>
@@ -106,12 +160,11 @@ function formatofecha($date)
 		<?php } ?>
 	</div>
 	<?php if($_SESSION['login_user']!=""){ ?>
-		<a class="btn btn-primary btn-lg" href="../modificar_publicacion.php/?id=<?php echo $id ?>" role="button">Modificar publicacion &raquo;</a><br><br>
 		<a class="btn btn-primary btn-lg" href="../index.php" role="button">Volver &raquo;</a> 
-	<?php }
+	<?php }	
 		else { ?>
 		    <a class="btn btn-primary btn-lg" href="../index.php" role="button">Volver &raquo;</a>
-	<?php } ?>
+	<?php } }?>
       <hr>
 
       <footer>
