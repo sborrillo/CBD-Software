@@ -66,8 +66,8 @@
 
     <div class="container">
       <!-- Example row of columns -->
-	<?php
-		$sql=mysql_query("SELECT * FROM publicacion WHERE nombre='$producto'");
+	<?php 
+		$sql=mysql_query("SELECT * FROM publicacion WHERE nombre LIKE '%$producto%'");
 	?>
 	<h1>Productos:</h1>
 	<div class="row">
@@ -79,12 +79,12 @@
 					<h2><?php 
 					echo $row['nombre'];?></h2>
 					<img width="350px" height="250px" src="fotos/<?php echo $row['foto'];?>"> 
-					<p><a class="btn btn-default" href="producto.php/?name=<?php echo $row['nombre'] ?>&desc=<?php echo $row['descripcion'] ?>&date=<?php echo $row['fecha'] ?>&pic=<?php echo $row['foto'] ?>"" role="button">Ver producto &raquo;</a></p>	
+					<p><a class="btn btn-default" href="producto.php/?id=<?php echo $row['id_publicacion'] ?>" role="button">Ver producto &raquo;</a></p>	
 				</div>	
 		<?php 	}
 		}
 		else{
-		?><h2>No se encontraron productos con ese nombre.</h2>	
+		?><h2>No se encontraron resultados.</h2>	
 		<?php } ?>
 	</div>
 	<?php if($_SESSION['login_user']!=""){ ?>
