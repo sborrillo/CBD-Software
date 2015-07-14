@@ -6,7 +6,6 @@
 	$name=$_FILES['foto']['name'];
 	$tmp_name=$_FILES['foto']['tmp_name'];
 	$userName=$_SESSION['login_user'];
-	$date=date("d-m-Y");
 	$types=array('image/jpg', 'image/jpeg', 'image/pjpeg', 'image/png');
 	if(!in_array($_FILES['foto']['type'], $types)){
 		$mensaje="Solo puede subir imagenes con la extension JPEG, JPG, PJPEG o PNG";
@@ -24,4 +23,4 @@
 		}
 	}	
 	mysql_close();
-?> 	 	
+?> 	 		 	
