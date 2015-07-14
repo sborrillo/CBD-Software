@@ -2,10 +2,10 @@
 -- version 4.0.10deb1
 -- http://www.phpmyadmin.net
 --
--- Servidor: localhost
--- Tiempo de generación: 06-06-2015 a las 05:35:50
--- Versión del servidor: 5.5.43-0ubuntu0.14.04.1
--- Versión de PHP: 5.5.9-1ubuntu4.9
+-- Host: localhost
+-- Generation Time: Jul 14, 2015 at 06:43 AM
+-- Server version: 5.5.43-0ubuntu0.14.04.1
+-- PHP Version: 5.5.9-1ubuntu4.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,13 +17,48 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Base de datos: `bestnid`
+-- Database: `bestnid`
 --
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `publicacion`
+-- Table structure for table `comentario`
+--
+
+CREATE TABLE IF NOT EXISTS `comentario` (
+  `idComentario` int(11) NOT NULL AUTO_INCREMENT,
+  `idPublicacion` int(11) NOT NULL,
+  `idUsuario` varchar(30) NOT NULL,
+  `texto` text NOT NULL,
+  `fecha` datetime NOT NULL,
+  PRIMARY KEY (`idComentario`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
+
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `oferta`
+--
+
+CREATE TABLE IF NOT EXISTS `oferta` (
+  `idOferta` int(11) NOT NULL AUTO_INCREMENT,
+  `idPublicacion` int(11) NOT NULL,
+  `idUsuario` varchar(30) NOT NULL,
+  `monto` int(7) NOT NULL,
+  `fecha` datetime NOT NULL,
+  `necesidad` text NOT NULL,
+  PRIMARY KEY (`idOferta`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `publicacion`
 --
 
 CREATE TABLE IF NOT EXISTS `publicacion` (
@@ -32,14 +67,19 @@ CREATE TABLE IF NOT EXISTS `publicacion` (
   `descripcion` text,
   `dni_usuario` int(11) NOT NULL,
   `fecha` datetime NOT NULL,
-  `foto` varchar(30) NOT NULL,
+  `foto` varchar(20) NOT NULL,
+  `estado` int(1) NOT NULL,
   PRIMARY KEY (`id_publicacion`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=47 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+
+
+
+
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `usuario`
+-- Table structure for table `usuario`
 --
 
 CREATE TABLE IF NOT EXISTS `usuario` (
@@ -55,18 +95,31 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `password` varchar(20) NOT NULL,
   `nombre_usuario` varchar(30) NOT NULL,
   `admin` int(11) NOT NULL,
+  `fechaRegistro` datetime NOT NULL,
   PRIMARY KEY (`dni`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcado de datos para la tabla `usuario`
+
+
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `venta`
 --
 
-INSERT INTO `usuario` (`dni`, `nombre`, `apellido`, `email`, `numero`, `localidad`, `calle`, `depto`, `piso`, `password`, `nombre_usuario`, `admin`) VALUES
-(0, 'User', 'User', 'user@gmail.com', 0, 'zzz', 'zzz', '', 0, 'usuario', 'usuario', 0),
-(35408572, 'Amaro', 'Darchez', 'amarodarchez@gmail.com', 453, 'Brandsen', 'Mitre', '', 0, 'amaro', 'amarodarchez', 1),
-(111111111, 'Admin', 'Admin', 'admin@gmail.com', 111, 'xxx', 'xxx', '', 0, 'admin', 'admin', 1),
-(123456789, 'Alexis', 'Carrarini', 'ale@gmail.com', 111, 'La Plata', '111', '', 0, 'alexis', 'alecarrarini', 1);
+CREATE TABLE IF NOT EXISTS `venta` (
+  `idVenta` int(11) NOT NULL AUTO_INCREMENT,
+  `idUsuario` varchar(30) NOT NULL,
+  `idPublicacion` int(11) NOT NULL,
+  `fecha` datetime NOT NULL,
+  PRIMARY KEY (`idVenta`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+
+
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
