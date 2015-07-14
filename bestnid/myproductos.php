@@ -48,7 +48,7 @@
         <div id="navbar" class="navbar-collapse collapse">
 	 <b class="navbar-brand navbar-right" id="logout"><a href="logout.php">Cerrar Sesion</a></b>
 	   <b class="navbar-brand navbar-right" id="products"><a href="#">Datos Personales</a></b>
-	   <b class="navbar-brand navbar-right" id="products"><a href="profile.php">Pagina Principal</a></b>
+	   <b class="navbar-brand navbar-right" id="products"><a href="index.php">Pagina Principal</a></b>
         </div><!--/.navbar-collapse -->
       </div>
     </nav>
@@ -79,15 +79,16 @@
 	<div class="row">
 	<?php
 		while($row=mysql_fetch_array($sql, MYSQL_ASSOC)){
-			?>
+			if($row['estado']==0){ ?>
 			<div class="col-md-4">
 				<h2><?php echo $row['nombre']; ?></h2>
 				<img width="350px" height="250px" src="../fotos/<?php echo $row['foto'];?>"> 
-				<p><a class="btn btn-default" href="producto.php/?name=<?php echo $row['nombre'] ?>&desc=<?php echo $row['descripcion'] ?>&date=<?php echo $row['fecha'] ?>&pic=<?php echo $row['foto'] ?>&id=<?php echo $row['id_publicacion'] ?>" role="button">Ver producto &raquo;</a></p>	
-			</div>	
-		<?php } mysql_close();?>
+				 	<p><a class="btn btn-default" href="producto.php/?name=<?php echo $row['nombre'] ?>&desc=<?php echo $row['descripcion'] ?>&date=<?php echo $row['fecha'] ?>&pic=<?php echo $row['foto'] ?>&id=<?php echo $row['id_publicacion'] ?>" role="button">Ver producto &raquo;</a></p>	
+			</div>
+			<?php }	
+		 } mysql_close();?>
 	</div>
-	<a class="btn btn-primary btn-lg" href="profile.php" role="button">Volver &raquo;</a>
+	<a class="btn btn-primary btn-lg" href="index.php" role="button">Volver &raquo;</a>
       <footer>
         <p align="center">&copy; Desarrollado por CBD</p>
       </footer>
