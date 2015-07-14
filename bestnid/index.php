@@ -1,4 +1,4 @@
-<?php
+	<?php
 	include('connect.php');
 	session_start();
 ?>
@@ -51,11 +51,18 @@
 			<?php } ?>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-				<?php if(isset($_SESSION['login_user'])){?>	
+				<?php if(isset($_SESSION['login_user'])){	?>
 					<b class="navbar-brand navbar-right" id="logout"><a href="logout.php">Cerrar Sesion</a></b>
 	  				<b class="navbar-brand navbar-right" id="products"><a href="myproductos.php">Mis productos</a></b>
-	   			<b class="navbar-brand navbar-right" id="products"><a href="#">Datos Personales</a></b>
-				<?php } 
+	   			<b class="navbar-brand navbar-right" id="datos"><a href="datosPersonales.php">Datos Personales</a></b> <?php
+					if($_SESSION['nivel']==1){ ?>
+						<b class="navbar-brand navbar-right" ><a href="reportes.php">Reportes</a></b>
+						<b class="navbar-brand navbar-right" ><a href="restringirForm.php">Restringir acceso</a></b>
+						<b class="navbar-brand navbar-right" ><a href="gestionUsuarios.php">Gestion de Usuarios</a></b>
+						<b class="navbar-brand navbar-right" ><a href="productos.php">Subastas</a></b> 
+						<b class="navbar-brand navbar-right" ><a href="ventas.php">Ventas</a></b> <?php
+					}
+				 } 
 					else{ ?>
         				<form class="navbar-form navbar-right" method='POST' action='login.php'>
             		<input type="text" id='inputUsername' name="username" class="form-control" placeholder="Nombre de usuario" required>
@@ -63,9 +70,14 @@
             		<button type="submit" class="btn btn-success">Iniciar Sesion</button>
 	    				<a class="btn btn-succes" href="register_form.php">Registrarse</a>
 								<?php			
+									if(isset($_GET['bloq'])){ ?>
+										<div>
+										<b Style="color:#D00909"><?php echo "* " .$_GET['bloq']; ?></b> 
+										</div> <?php
+									}
 									if(isset($_GET['msg'])){ ?>
 										<div>
-										<b Style="color:#D00909"><?php echo $_GET['msg']; ?></b>
+										<b Style="color:#D00909"><?php echo "* ". $_GET['msg']; ?></b>
 										</div>
 							 	<?php } ?>
 				<?php } ?>
@@ -96,7 +108,7 @@
 			<br>
 			<p>Tambien podes buscar el producto que te interesa.</p>
 			<form class="form-signin" action='buscar.php' method='POST'>
-				<input type="text" name='producto' placeholder="Producto" class="form-control">
+				<input type="text" name='producto' placeholder="Producto" class="form-control" required>
         		<button class="btn btn-primary btn-lg" type="submit">Buscar &raquo;</button>
 			</form>
 			<br>
@@ -106,19 +118,21 @@
     <div class="container">
       <!-- Example row of columns -->
 			<?php
-				$sql=mysql_query("SELECT TOP 12 * FROM publicacion ORDER BY id_publicacion DESC");
+				$sql=mysql_query("SELECT * FROM publicacion ORDER BY id_publicacion DESC");
 			?>
 			<h1>Últimas publicaciones</h1>
-			<?php for($i=1;$i<=4;$i++){ ?>
+			<?php for($i=1;$i<=3;$i++){ ?>
       	<div class="row">
 				<?php 
 				for($x=1;$x<=3;$x++){
 					$row=mysql_fetch_array($sql, MYSQL_ASSOC) ?>
+					<?php if($row['estado']==0){ ?>
 					<div class="col-md-4">
 						<h2><?php echo $row['nombre']; ?></h2>
 						<img width	="350px" height="250px" src="../fotos/<?php echo $row['foto'];?>"> 
-						<p><a class="btn btn-default" href="producto.php/?name=<?php echo $row['nombre'] ?>&desc=<?php echo $row['descripcion'] ?>&date=<?php echo $row['fecha'] ?>&pic=<?php echo $row['foto'] ?>&id=<?php echo $row['id_publicacion'] ?>" role="button">Ver producto &raquo;</a></p>	
-					</div>	
+						<p><a class="btn btn-default" href="producto.php/?id=<?php echo $row['id_publicacion'] ?>" role="button">Ver producto &raquo;</a></p>	
+					</div>
+					<?php } ?>
 				<?php }
 			} ?>
     </div>
@@ -139,4 +153,4 @@
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
   </body>
-</html> 
+</html>
