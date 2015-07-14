@@ -3,6 +3,7 @@
   session_start();
   $id=$_GET['id'];
   $result = mysql_query("SELECT * FROM publicacion WHERE id_publicacion ='$id'");
+  $datosProd=mysql_fetch_assoc($result);	
  ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -58,12 +59,14 @@
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
       <div class="container">
-        <h2>Modificar producto</h2>
+        <b><h2>Modificar producto</h2></b><br>	
         <p>Escriba los nuevos datos del producto:</p>
     <form method="POST" action="../actionModificarPublicacion.php?id=<?php echo $id; ?>">
-    	<input type="text" name='nombre'  placeholder="Nombre del producto" class="form-control">
+		<b><p>Nombre del producto:</p></b>
+    	<input type="text" name='nombre' value="<?php echo $datosProd['nombre']; ?>" class="form-control">
     	<br>
-    	<textarea name="desc" placeholder="Descripcion del producto" class="form-control"></textarea>
+		<b><p>Descripcion del producto:</p></b>
+    	<textarea name="desc" class="form-control"><?php echo $datosProd['descripcion']; ?></textarea>
    	<br>
 		<button class="btn btn-primary btn-lg" type="submit" class="form-control">Modificar publicacion &raquo;</button>
     </form>
@@ -78,7 +81,7 @@
 
     <div class="container">
       <!-- Example row of columns -->
-  <a class="btn btn-primary btn-lg" href="index.php" role="button">Volver &raquo;</a>
+  <a class="btn btn-primary btn-lg" href="../producto.php?id=<?php echo $id ?>" role="button">Volver &raquo;</a>
       <hr>
 
       <footer>
