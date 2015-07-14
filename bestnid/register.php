@@ -27,19 +27,31 @@
 	if($password!=$pass2){
 		$errors[]="Las contraseñas no coinciden";
 	}
-	$checkemail=mysql_query("SELECT * FROM usuario WHERE email='$email'");
-	$emailexist=mysql_num_rows($checkemail);
+	$emailexist=mysql_num_rows(mysql_query("SELECT * FROM usuario WHERE email='$email'"));
 	if($emailexist>0){
 		$errors[]="El email \'' .$email . '\' ya se encuentra registrado en el sistema";		
 	}
+	$userexist=mysql_num_rows(mysql_query("SELECT * FROM usuario WHERE nombre_usuario='$username'"));
+	if($userexist>0){
+		$errors[]="El nombre de usuario \'' .$username . '\' ya se encuentra registrado en el sistema";		
+	}
+	$dniexist=mysql_num_rows(mysql_query("SELECT * FROM usuario WHERE dni='$dni'"));
+	if($dniexist>0){
+		$errors[]="El DNI \'' .$dni . '\' ya se encuentra registrado en el sistema";		
+	}
 	if(empty($errors)){
-		mysql_query("INSERT INTO usuario VALUES('$dni', '$name', '$lastName', '$email', '$number', '$city', '$street', '$depto', '$floor', '$password', '$username', 0)");	
-		$_SESSION['login_user']=$username; 
-		$_SESSION['nivel']=0;					
-		header ("Location: index.php?mensaje=Se ha registrado exitosamente!");
+		mysql_query("INSERT INTO usuario VALUES('$dni', '$name', '$lastName', '$email', '$number', '$city', '$street', '$depto', '$floor', '$password', '$username', 0, now())");	
+		if($_SESSION['nivel']==1){
+			header ("Location: gestionUsuarios.php?mensaje=Usuario registrado exitosamente!");
+		}else{	
+			$_SESSION['login_user']=$username; 
+			$_SESSION['nivel']=0;					
+			header ("Location: index.php?mensaje=Se ha registrado exitosamente!");
+		}
 	}
 	else{
-		header ("Location: register_form.php?errors=$errors");
+		$_SESSION['errors']=$errors;
+		header ("Location: register_form.php");
 	}				
 	mysql_close();
 ?>
