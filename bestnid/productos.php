@@ -59,12 +59,6 @@
     <div class="jumbotron">
       <div class="container">
         <h1>Productos en subasta</h1>
-        <p>En esta sección encontraras todos los productos publicados en el sitio.</p>
-	<form action='buscar.php' method='POST'>
-	<input type="text" name='producto' placeholder="Producto" class="form-control">
-        <button class="btn btn-primary btn-lg" type="submit">Buscar &raquo;</button>
-	<br>
-	</form>
       </div>
     </div>
 
@@ -72,26 +66,23 @@
       <!-- Example row of columns -->
 	<?php
 		$sql=mysql_query("SELECT * FROM publicacion"); 
-	?>
-	<h1>Productos</h1>
-	<div class="row">
-	<?php
-		while($row=mysql_fetch_array($sql,MYSQL_ASSOC)){
-			?>
-			<div class="col-md-4">
-				<h2><?php 
-				echo $row['nombre'];?></h2>
-				<img width="350px" height="250px" src="fotos/<?php echo $row['foto'];?>"> 
-				<p><a class="btn btn-default" href="producto.php/?name=<?php echo $row['nombre'] ?>&desc=<?php echo $row['descripcion'] ?>&date=<?php echo $row['fecha'] ?>&pic=<?php echo $row['foto'] ?>&id=<?php echo $row['id_publicacion'] ?>" role="button">Ver producto &raquo;</a></p>	
-			</div>	
+	if(mysql_num_rows($sql)>0){ ?>
+	<div class="tabla">
+		<TABLE border=2 CELLSPACING="5" WIDTH="85%">
+		<TR><TH ALIGN="center"> ID Publicacion </TH><TH> Nombre Publicacion </TH><TH> DNI Usuario </TH><TH> Fecha </TH><TH> Descripcion </TH><TH></TH></TR>
+		<?php
+			while($row=mysql_fetch_array($sql,MYSQL_ASSOC)){
+			$date=date("d/m/Y", $row['fecha'])?>
+			<TR><TD ALIGN="center"><?php echo $row['id_publicacion'] ?></TD><TD ALIGN="center"><?php echo $row['nombre'] ?></TD><TD ALIGN="center"><?php echo $row['dni_usuario'] ?></TD><TD ALIGN="center"><?php echo $date ?></TD><TD ALIGN="center"><?php echo $row['descripcion'] ?></TD><TD ALIGN="center"><p><a class="btn btn-default" href="producto.php/?name=<?php echo $row['nombre'] ?>&desc=<?php echo $row['descripcion'] ?>&date=<?php echo $row['fecha'] ?>&pic=<?php echo $row['foto'] ?>&id=<?php echo $row['id_publicacion'] ?>" role="button">Ver producto &raquo;</a></p></TD></TR>
 		<?php } ?>
+		<TABLE>
 	</div>
-	<?php if($_SESSION['login_user']!=""){ ?>
-		<a class="btn btn-primary btn-lg" href="profile.php" role="button">Volver &raquo;</a>  
-	<?php }
-		else { ?>
-		    <a class="btn btn-primary btn-lg" href="index.php" role="button">Volver &raquo;</a>
+	<?php }else{ ?>
+					<font size=3><b Style="color:#D00909">No hay publicaciones en el sistema.</b></font> 	
 	<?php } ?>
+	<hr>
+	<a class="btn btn-primary btn-lg" href="index.php" role="button">Volver &raquo;</a>
+
 	<hr>
 
       <footer>
