@@ -1,4 +1,4 @@
-	<?php
+<?php
 	include('connect.php');
 	session_start();
 ?>
@@ -103,10 +103,12 @@
 			<h1 align="center">Bienvenido a Bestnid!</h1> 
 			<br>
      		<p>Una pagina de subastas online donde la necesidad es mas importante que el precio.</p>
-			<p>Podes comenzar publicando un producto.</p> <a class="btn btn-primary btn-lg" href="publicar_form.php" role="button">Publicar producto &raquo;</a>
+			<?php if(isset($_SESSION['login_user'])){	?>
+				<p>Podes comenzar publicando un producto.</p> <a class="btn btn-primary btn-lg" href="publicar_form.php" role="button">Publicar producto &raquo;</a>
+			<?php } ?>
 			<br>
 			<br>
-			<p>Tambien podes buscar el producto que te interesa.</p>
+			<p>Busca el producto que te interesa.</p>
 			<form class="form-signin" action='buscar.php' method='POST'>
 				<input type="text" name='producto' placeholder="Producto" class="form-control" required>
         		<button class="btn btn-primary btn-lg" type="submit">Buscar &raquo;</button>
@@ -153,4 +155,4 @@
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
   </body>
-</html>
+</html> 
