@@ -10,6 +10,7 @@
 	$pic=$datosProd['foto'];
 	$desc=$datosProd['descripcion'];
 	$owner=$datosProd['dni_usuario'];
+	$fecha=new DateTime($date);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -70,7 +71,7 @@
         <h1><?php echo $name; ?></h1>
 	<h2>Descripción:</h2>
 	<h3><?php echo $desc; ?></h3>
-	<p>Fecha publicación: <?php echo date("d-m-Y", $date); ?></p>
+	<p>Fecha publicación: <?php echo date_format($fecha,'d-m-Y'); ?></p>
       </div>
     </div>
 
@@ -111,38 +112,30 @@
 			<br><br>
 		</form>
 		<?php }
-			$query=mysql_query("SELECT * FROM comentario WHERE idPublicacion='$id' ORDER BY idComentario DESC"); 
+			$query=mysql_query("SELECT * FROM comentario WHERE idPublicacion='$id' ORDER BY idComentario DESC");  
 			if((mysql_num_rows($query)==0) && ($owner==$datosUser['dni'])){ ?>
 				<div class="emptyComment" style="border-top:thin dotted;">
 					<font size=4><b Style="color:#0404B4">No hay comentarios realizados sobre este producto</b></font><br>
 				</div>
 			<?php }
-			if(mysql_num_rows($query)>5){
-				for($i=1;$i<=5;$i++){ 
-					$row_coment=mysql_fetch_array($query, MYSQL_ASSOC); ?>
-					<div class="comentario" style="border-top:thin dotted;">
-						<br><p><?php echo $row_coment['texto']; ?></p>
-						<?php if($_SESSION['nivel']==1){ 
-									$idComentario=$row_coment['idComentario']; ?>
-									<div align="right"><a href="../borrarComentario.php?idComment=<?php echo $idComentario?>&idProduct=<?php echo $id ?>">Borrar comentario</a></div>  
-								<?php } ?>
-					</div> <?php
-				}
-			}
-			else{
-				if(mysql_num_rows($query)>0){
+			if(mysql_num_rows($query)>0){
 					$num_rows=mysql_num_rows($query);
 					for($i=1;$i<=$num_rows;$i++){ 
-						$row_coment=mysql_fetch_array($query, MYSQL_ASSOC); ?>
-						<div class="comentario" style="border-top:thin dotted;">
-							<br><b><?php echo $row_coment['texto']; ?></b>
-							<?php if($_SESSION['nivel']==1){ 
-									$idComentario=$row_coment['idComentario']; ?>
+						$row_coment=mysql_fetch_array($query, MYSQL_ASSOC);
+						$idComentario=$row_coment['idComentario']; 
+						$queryResp=mysql_query("SELECT * FROM respuesta WHERE idComentario='$idComentario'"); ?>
+						<div class="comentario" style="border-top:thin dotted;"><br>
+							<img width="20px" height="20px" src="../coment.jpg"><b><?php echo $row_coment['texto']; ?></b>
+							<?php if(mysql_num_rows($queryResp)>0){ 
+									$resp=mysql_fetch_assoc($queryResp); ?><br>
+									<img width="25px" height="25px" hspace="15" src="../resp.jpg"><b><?php echo $resp['texto']; ?></b><br>
+							<?php } if($_SESSION['nivel']==1){ ?>
 									<div align="right"><a href="borrarComentario.php?idComment=<?php echo $idComentario?>&idProduct=<?php echo $id ?>">Borrar comentario</a></div>
-								<?php } ?>
+								<?php }
+								if($owner==$datosUser['dni'] && mysql_num_rows($queryResp)==0){ ?>
+									<div align="right"><a href="../responderComentario.php?idComment=<?php echo $idComentario ?>">Responder comentario</a></div> <?php } ?>
 						</div><?php
 					}
-				}
 			}
 		?>
 	</div>
