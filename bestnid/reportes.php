@@ -76,9 +76,13 @@
 				<input type="number" name="mes2" placeholder="Mes(MM)..." required >
 				<input type="number" name="anio2" placeholder="Año(YYYY)..." required >
 			</form><br>
-			<?php if(isset($_GET['cantUsers'])){ ?>
-						<b Style="color:#D00909"><?php echo "Cantidad de usuario registrados entre el ".$_GET['f1']." y el ".$_GET['f2'].": " .$_GET['cantUsers']; ?></b>	
-			<?php } ?>		
+		<?php 
+			 if(isset($_GET['error'])){ ?>
+							<font size=4><b Style="color:#D00909"><?php echo "*".$_GET['error']; ?></b></font><br> <?php
+				}else{
+			 if(isset($_GET['cantUsers'])){ ?>
+						<font size=4><b><?php echo "Cantidad de usuarios registrados entre el ".$_GET['f1']." y el ".$_GET['f2'].": "?></b><b Style="color:#D00909"><?php echo $_GET['cantUsers']." usuarios"; ?></b></font>	
+			<?php } } ?>		
 			<br><hr>
 			<font size=5><b>Cantidad de ventas concretadas entre dos fechas.</b></font><br><br>
 			<font size=4><b>Ingrese las fechas limites:</b></font>
@@ -92,9 +96,11 @@
 				<input type="number" name="anio2" placeholder="Año(YYYY)..." required >
 			</form>
 			<br>
-			<?php if(isset($_GET['cantVentas'])){ ?>
-						<b Style="color:#D00909"><?php echo "Cantidad de ventas registradas entre el ".$_GET['f1']."y el ".$_GET['f2'].": " .$_GET['cantVentas']; ?></b>	
-			<?php } ?>
+			<?php if(isset($_GET['errorVentas'])){ ?>
+							<font size=4><b Style="color:#D00909"><?php echo "*".$_GET['errorVentas']; ?></b></font><br> <?php
+			}else{ if(isset($_GET['cantVentas'])){ ?>
+						<font size=4><b><?php echo "Cantidad de ventas registradas entre el ".$_GET['f1']."y el ".$_GET['f2'].": "?></b><b Style="color:#D00909"><?php echo $_GET['cantVentas']." ventas"; ?></b></font>	
+			<?php } } ?>
       </div>
     </div>
 
@@ -119,4 +125,4 @@
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
   </body>
-</html> 
+</html>
